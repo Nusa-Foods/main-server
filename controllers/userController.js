@@ -5,7 +5,6 @@ const { generateToken } = require("../utils/jsonwebtoken");
 
 const createUser = async (req, res) => {
     const { username, email, password } = req.body;
-
     const errors = validateUserData({ username, email, password });
     if (errors.length > 0)
         return res.status(400).json({ message: "Validation failed", errors });
@@ -21,7 +20,6 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await userModel.getUserByEmail(email);
         if (!user) throw { message: "unAuthenticated" };
 
@@ -55,5 +53,4 @@ const logout = async (req, res) => {
     }
 };
 
-const UserController = { createUser, login, logout };
-module.exports = UserController;
+module.exports = { createUser, login, logout };

@@ -1,6 +1,5 @@
 const { database } = require("../config/mongo");
 const { hashPassword } = require("../utils/bcrypt");
-
 const db = database.collection("users");
 
 async function createUser(userData) {
