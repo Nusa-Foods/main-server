@@ -1,5 +1,4 @@
 const Groq = require("groq-sdk");
-
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const recipeGenerator = async (ingredients) => {
@@ -14,6 +13,7 @@ const recipeGenerator = async (ingredients) => {
     });
     return response.choices[0].message.content;
 };
+
 const ingredientDescriptionGenerator = async (ingredients) => {
     const response = await groq.chat.completions.create({
         messages: [

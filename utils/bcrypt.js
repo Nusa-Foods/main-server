@@ -1,16 +1,14 @@
 const bcrypt = require("bcryptjs");
 
 const hashPassword = (password) => {
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  return hashedPassword;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    return hashedPassword;
 };
 
-const comparePassword = (password, hashedPassword) => {
-  const isMatch = bcrypt.compareSync(password, hashedPassword);
-  return isMatch;
-};
+const comparePassword = (password, hashedPassword) =>
+    bcrypt.compareSync(password, hashedPassword);
 
 module.exports = {
-  hashPassword,
-  comparePassword,
+    hashPassword,
+    comparePassword,
 };
