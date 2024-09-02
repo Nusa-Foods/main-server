@@ -1,13 +1,9 @@
 const express = require("express");
-const {
-    getRecipe,
-    getRandomRecipe,
-    getIngredientDescription,
-} = require("../controllers/aiController");
 const aiRouter = express.Router();
+const AiController = require("../controllers/aiController");
 
-aiRouter.post("/recipe", getRecipe);
-aiRouter.get("/recipe/random", getRandomRecipe);
-aiRouter.post("/ingredient-description", getIngredientDescription);
+aiRouter.post("/recipe", AiController.getRecipe);
+aiRouter.get("/recipe/random", AiController.getRandomRecipe);
+aiRouter.post("/ingredient-description", AiController.getIngredientDescription);
 
 module.exports = aiRouter;

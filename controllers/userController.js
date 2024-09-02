@@ -55,4 +55,5 @@ const logout = async (req, res) => {
     }
 };
 
-module.exports = { createUser, login, logout };
+const UserController = { createUser, login, logout };
+module.exports = UserController;

@@ -30,4 +30,6 @@ const getIngredientDescription = async (req, res) => {
     }
 };
 
-module.exports = { getRecipe, getRandomRecipe, getIngredientDescription };
+const AiController = { getRecipe, getRandomRecipe, getIngredientDescription };
+
+module.exports = AiController;
