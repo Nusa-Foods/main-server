@@ -9,6 +9,6 @@ const client = new MongoClient(uri, {
     },
 });
 
-const database = client.db("nusa-foods");
+const database = client.db(process.env.MONGO_DBNAME);
 
 module.exports = { database };
