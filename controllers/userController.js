@@ -27,6 +27,7 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(req.body);
     const user = await userModel.getUserByEmail(email);
 
     if (!user) throw { message: "unAuthenticated" };
@@ -45,6 +46,7 @@ const login = async (req, res) => {
       .cookie("Authorization", `Bearer ${token}`)
       .json({ accessToken: token });
   } catch (error) {
+    console.log(error);
     if (error.message === "unAuthenticated")
       return res.status(404).json({ message: "Invalid Email or Password" });
     res.status(500).json({ message: "internal sever error" });
