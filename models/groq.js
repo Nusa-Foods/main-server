@@ -1,15 +1,19 @@
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// const model = "llama3-8b-8192"; //meta
+// const model = "llama3-groq-8b-8192-tool-use-preview"; // meta x groq
+// const model = "gemma2-9b-it"; // google
+const model = "mixtral-8x7b-32768"; // mixtral
 
 const recipeGenerator = async (ingredients) => {
     const response = await groq.chat.completions.create({
         messages: [
             {
                 role: "user",
-                content: `give me food recipe that use ${ingredients}`,
+                content: `buatkan saya satu resep makanan yang menggunakan bahan bahan ini, bahan makanan = ${ingredients}. gunakan bahasa indonesia`,
             },
         ],
-        model: "llama3-8b-8192",
+        model: model,
     });
     return response.choices[0].message.content;
 };
@@ -19,10 +23,10 @@ const ingredientDescriptionGenerator = async (ingredients) => {
         messages: [
             {
                 role: "user",
-                content: `give me description about this ingredients. ingredients = ${ingredients}`,
+                content: `berikan saya penjelasan deskripsi dari bahan makanan ini. bahan makanan = ${ingredients}. gunakan bahasa indonesia`,
             },
         ],
-        model: "llama3-8b-8192",
+        model: model,
     });
     return response.choices[0].message.content;
 };
@@ -32,10 +36,10 @@ const randomRecipe = async () => {
         messages: [
             {
                 role: "user",
-                content: `give me one random recipe that looks interesting to cook, first give me reason why i should cook this recipe and explain about the `,
+                content: `berikan saya resep secara asak untuk di masak sekarang juga, berikan juga penjelasan tentang menariknya resep yang di sarankan untuk dimasak. gunakan bahasa indonesia`,
             },
         ],
-        model: "llama3-8b-8192",
+        model: model,
     });
     return response.choices[0].message.content;
 };
