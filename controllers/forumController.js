@@ -2,7 +2,7 @@ const {
     createForum,
     getForumBySlug,
     addCommentToForum,
-} = require("../models/forumModel");
+} = require("../models/forum");
 
 // Create a new forum post
 async function createForumHandler(req, res) {

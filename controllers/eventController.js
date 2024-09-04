@@ -3,7 +3,7 @@ const {
     getAllEvents,
     getEventBySlug,
     registerAttendance,
-} = require("../models/eventModel");
+} = require("../models/event");
 
 // Create a new event
 async function createEventHandler(req, res) {
