@@ -12,9 +12,9 @@ async function createRecipe(recipeData) {
         description: recipeData.description,
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
-        slug: generateSlug(recipeData.title), // Automatically generate a slug from the title
-        likes: [], // Default to empty array
-        comments: [], // Default to empty array
+        slug: generateSlug(recipeData.title),
+        likes: [],
+        comments: [],
         createdAt: new Date(),
         updatedAt: new Date(),
     };
@@ -39,7 +39,6 @@ async function getRecipesByUserId(userId) {
 }
 
 async function getRecipesByNusaFood() {
-    // Implement logic to get recipes specific to NusaFood
     const recipes = await db.find({ source: "NusaFood" }).toArray();
     return recipes;
 }
