@@ -3,12 +3,12 @@ const recipeRouter = express.Router();
 const RecipeController = require("../controllers/recipeController");
 
 // Define routes for recipe operations
-recipeRouter.get("/", RecipeController.getAllRecipesHandler); // GET /recipe
-recipeRouter.get("/owned", RecipeController.getRecipesByUserIdHandler); // GET /recipe/owned (requires user ID from token)
-recipeRouter.get("/nusafood", RecipeController.getRecipesByNusaFoodHandler); // GET /recipe/nusafood
-recipeRouter.get("/:slug", RecipeController.getRecipeBySlugHandler); // GET /recipe/:slug
-recipeRouter.post("/", RecipeController.addRecipeHandler); // POST /recipe
-recipeRouter.put("/:slug", RecipeController.updateRecipeHandler); // PUT /recipe/:slug
-recipeRouter.delete("/:slug", RecipeController.deleteRecipeHandler); // DELETE /recipe/:slug
+recipeRouter.get("/", RecipeController.getAllRecipesHandler);
+recipeRouter.get("/owned", RecipeController.getRecipesByUserIdHandler);
+recipeRouter.get("/nusafood", RecipeController.getRecipesByNusaFoodHandler);
+recipeRouter.get("/:slug", RecipeController.getRecipeBySlugHandler);
+recipeRouter.post("/", RecipeController.addRecipeHandler);
+recipeRouter.put("/:slug", RecipeController.updateRecipeHandler);
+recipeRouter.delete("/:slug", RecipeController.deleteRecipeHandler);
 
 module.exports = recipeRouter;
