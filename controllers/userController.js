@@ -4,65 +4,64 @@ const { comparePassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/jsonwebtoken");
 
 const createUser = async (req, res) => {
-  const { username, email, password } = req.body;
+    const { username, email, password } = req.body;
 
-  const emailExist = await userModel.getUserByEmail(email);
+    const emailExist = await userModel.getUserByEmail(email);
 
-  if (emailExist)
-    return res.status(400).json({ message: "Email Already Exist" });
+    if (emailExist)
+        return res.status(400).json({ message: "Email Already Exist" });
 
-  const errors = validateUserData({ username, email, password });
+    const errors = validateUserData({ username, email, password });
 
-  if (errors.length > 0)
-    return res.status(400).json({ message: "Validation Error", errors });
+    if (errors.length > 0)
+        return res.status(400).json({ message: "Validation Error", errors });
 
-  try {
-    userModel.createUser({ username, email, password });
-    res.status(201).json({ message: "Successfully Created User" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+    try {
+        userModel.createUser({ username, email, password });
+        res.status(201).json({ message: "Successfully Created User" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
 const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log(req.body);
-    const user = await userModel.getUserByEmail(email);
+    try {
+        const { email, password } = req.body;
+        console.log(req.body);
+        const user = await userModel.getUserByEmail(email);
 
-    if (!user) throw { message: "unAuthenticated" };
+        if (!user) throw { message: "unAuthenticated" };
 
-    const isValidPassword = comparePassword(password, user.password);
+        const isValidPassword = comparePassword(password, user.password);
 
-    if (!isValidPassword) throw { message: "Wrong Password" };
+        if (!isValidPassword) throw { message: "Wrong Password" };
 
-    const token = generateToken({
-      email: user.email,
-      _id: String(user._id),
-    });
+        const token = generateToken({
+            email: user.email,
+            _id: String(user._id),
+        });
 
-    res
-      .status(200)
-      .cookie("Authorization", `Bearer ${token}`)
-      .json({ accessToken: token });
-  } catch (error) {
-    console.log(error);
-    if (error.message === "unAuthenticated")
-      return res.status(404).json({ message: "Invalid Email or Password" });
-    res.status(500).json({ message: "internal sever error" });
-  }
+        res.status(200)
+            .cookie("Authorization", `Bearer ${token}`)
+            .json({ accessToken: token });
+    } catch (error) {
+        console.log(error);
+        if (error.message === "unAuthenticated")
+            return res
+                .status(404)
+                .json({ message: "Invalid Email or Password" });
+        res.status(500).json({ message: "internal sever error" });
+    }
 };
 
 const logout = async (req, res) => {
-  try {
-    res
-      .cookie("Authorization", "", {
-        setTimeout: new Date(),
-      })
-      .json({ message: "Logout Success" });
-  } catch (error) {
-    res.status(500).json({ message: "internal server error" });
-  }
+    try {
+        res.cookie("Authorization", "", {
+            setTimeout: new Date(),
+        }).json({ message: "Logout Success" });
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
+    }
 };
 
 module.exports = { createUser, login, logout };
