@@ -2,9 +2,14 @@ const { database } = require("../config/mongo");
 const db = database.collection("forums");
 
 // Forum data structure
+function generateSlug(name) {
+    return name.toLowerCase().replace(/\s+/g, "-");
+}
+
 async function createForum(forumData) {
     const newForum = {
         title: forumData.title.toUpperCase(), // Title converted to uppercase
+        slug: generateSlug(forumData.title),
         content: forumData.content,
         imageUrl: forumData.imageUrl,
         createdBy: forumData.createdBy, // From req.user
