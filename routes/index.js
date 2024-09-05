@@ -9,7 +9,7 @@ const authentication = require("../middleware/authentication");
 const routes = express.Router();
 
 routes.use("/user", userRouter);
-routes.use("/ai", authentication, aiRouter);
+routes.use("/ai", aiRouter);
 routes.use("/inge", authentication, ingeRouter);
 routes.use("/recipe", authentication, recipeRouter);
 routes.use("/forum", authentication, forumRouter);
