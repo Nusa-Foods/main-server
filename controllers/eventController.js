@@ -65,7 +65,7 @@ async function registerAttendanceHandler(req, res) {
     try {
         const slug = req.params.slug;
         const userData = {
-            name: req.user.name, // User's name from req.user
+            name: req.user.name,
             email: req.user.email, // User's email from req.user
             registeredAt: new Date(),
         };
