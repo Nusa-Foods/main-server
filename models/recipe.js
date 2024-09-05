@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongo");
 const db = database.collection("recipes");
 
@@ -13,7 +14,7 @@ async function createRecipe(recipeData) {
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
         slug: generateSlug(recipeData.title),
-        authorId: recipeData.userId,
+        authorId: new ObjectId(recipeData.userId),
         likes: [],
         comments: [],
         createdAt: new Date(),
@@ -35,7 +36,7 @@ async function getRecipeBySlug(slug) {
 }
 
 async function getRecipesByUserId(userId) {
-    const recipes = await db.find({ authorId: userId }).toArray();
+    const recipes = await db.find({ authorId: new ObjectId(userId) }).toArray();
     return recipes;
 }
 
