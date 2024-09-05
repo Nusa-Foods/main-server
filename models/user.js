@@ -19,4 +19,9 @@ async function getUserByEmail(email) {
     return user;
 }
 
+async function getUserByEmail(email) {
+    const user = await db.findOne({ email: email });
+    return user;
+}
+
 module.exports = { createUser, getUserByEmail };
