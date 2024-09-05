@@ -81,12 +81,23 @@ async function getRecipeBySlugHandler(req, res) {
 
 async function addRecipeHandler(req, res) {
     const errorMessage = validateRecipeInput(req.body);
+
     if (errorMessage) {
         return res.status(400).json({ message: errorMessage });
     }
 
+    const user = req.user;
+
+    const recipeData = {
+        title: req.body.title,
+        description: req.body.description,
+        imgUrl: req.body.imgUrl,
+        bannerUrl: req.body.bannerUrl,
+        authorId: user.userId,
+    };
+
     try {
-        const result = await createRecipe(req.body);
+        const result = await createRecipe(recipeData);
         res.status(201).json({
             message: "Recipe created successfully.",
             recipeId: result.insertedId,

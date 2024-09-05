@@ -13,6 +13,7 @@ async function createRecipe(recipeData) {
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
         slug: generateSlug(recipeData.title),
+        authorId: recipeData.userId,
         likes: [],
         comments: [],
         createdAt: new Date(),
