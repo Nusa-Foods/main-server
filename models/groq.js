@@ -5,7 +5,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // const model = "gemma2-9b-it"; // google
 const model = "mixtral-8x7b-32768"; // mixtral
 
-const recipeGenerator = async (ingredients, retries = 3) => {
+const recipeGenerator = async (ingredients, retries = 5) => {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
             const response = await groq.chat.completions.create({
@@ -53,7 +53,7 @@ const ingredientDescriptionGenerator = async (ingredients) => {
 };
 
 const randomRecipe = async () => {
-    const retries = 3;
+    const retries = 5;
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
             const response = await groq.chat.completions.create({
