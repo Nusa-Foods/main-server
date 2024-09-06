@@ -2,6 +2,7 @@ const userModel = require("../models/user");
 const { validateUserData } = require("../utils/validation");
 const { comparePassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/jsonwebtoken");
+const { ObjectId } = require("mongodb");
 
 const createUser = async (req, res) => {
     const { username, email, password } = req.body;
@@ -64,4 +65,23 @@ const logout = async (req, res) => {
     }
 };
 
-module.exports = { createUser, login, logout };
+const getUserByIdHandler = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await userModel.getUserById(new ObjectId(id));
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to retrieve user",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { createUser, login, logout, getUserByIdHandler };

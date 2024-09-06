@@ -22,4 +22,27 @@ async function getUserByEmail(email) {
     return user;
 }
 
-module.exports = { createUser, getUserByEmail };
+async function getUserById(id) {
+    try {
+        const users = await db
+            .aggregate([
+                { $match: { _id: id } },
+                {
+                    $lookup: {
+                        from: "recipes",
+                        localField: "_id",
+                        foreignField: "authorId",
+                        as: "user_recipes",
+                    },
+                },
+            ])
+            .toArray();
+
+        return users.length > 0 ? users[0] : null;
+    } catch (error) {
+        console.error("Error while retrieving user by ID:", error.message);
+        throw error;
+    }
+}
+
+module.exports = { createUser, getUserByEmail, getUserById };
