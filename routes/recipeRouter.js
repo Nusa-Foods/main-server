@@ -10,5 +10,9 @@ recipeRouter.get("/:slug", RecipeController.getRecipeBySlugHandler);
 recipeRouter.post("/", RecipeController.addRecipeHandler);
 recipeRouter.put("/:slug", RecipeController.updateRecipeHandler);
 recipeRouter.delete("/:slug", RecipeController.deleteRecipeHandler);
+recipeRouter.post(
+    "/:slug/comments",
+    RecipeController.addCommentToRecipeHandler
+);
 
 module.exports = recipeRouter;
