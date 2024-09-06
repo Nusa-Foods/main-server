@@ -116,6 +116,33 @@ async function addCommentToRecipe(slug, commentData) {
     return result;
 }
 
+async function addLikeToRecipe(slug, likeData) {
+    const { userEmail } = likeData;
+
+    const recipe = await db.findOne({ slug: slug });
+
+    if (!recipe) {
+        console.log("Recipe not found.");
+        return { recipeNotFound: true };
+    }
+
+    if (recipe.likes.some((like) => like.userEmail === userEmail)) {
+        return { alreadyLiked: true };
+    }
+
+    const newLike = {
+        userEmail: userEmail,
+        createdAt: new Date(),
+    };
+
+    const result = await db.updateOne(
+        { slug: slug },
+        { $push: { likes: newLike } }
+    );
+
+    return result;
+}
+
 module.exports = {
     createRecipe,
     getAllRecipes,
@@ -125,4 +152,5 @@ module.exports = {
     updateRecipe,
     deleteRecipe,
     addCommentToRecipe,
+    addLikeToRecipe,
 };

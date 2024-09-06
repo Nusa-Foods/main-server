@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const {
     createRecipe,
     getAllRecipes,
@@ -7,6 +8,7 @@ const {
     updateRecipe,
     deleteRecipe,
     addCommentToRecipe,
+    addLikeToRecipe,
 } = require("../models/recipe");
 
 function validateRecipeInput(data) {
@@ -185,6 +187,39 @@ async function addCommentToRecipeHandler(req, res) {
     }
 }
 
+async function addLikeToRecipeHandler(req, res) {
+    const { slug } = req.params;
+    const userEmail = req.user.email;
+
+    const likeData = {
+        userEmail,
+    };
+
+    try {
+        const result = await addLikeToRecipe(slug, likeData);
+
+        if (result.recipeNotFound) {
+            return res.status(404).json({ message: "Recipe not found." });
+        }
+
+        if (result.alreadyLiked) {
+            return res
+                .status(400)
+                .json({ message: "User has already liked this recipe." });
+        }
+
+        if (result.modifiedCount === 1) {
+            res.status(200).json({ message: "Recipe liked successfully." });
+        } else {
+            res.status(404).json({ message: "Recipe not found." });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to like recipe.",
+            error: error.message,
+        });
+    }
+}
 module.exports = {
     getAllRecipesHandler,
     getRecipesByUserIdHandler,
@@ -194,4 +229,5 @@ module.exports = {
     updateRecipeHandler,
     deleteRecipeHandler,
     addCommentToRecipeHandler,
+    addLikeToRecipeHandler,
 };

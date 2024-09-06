@@ -14,5 +14,6 @@ recipeRouter.post(
     "/:slug/comments",
     RecipeController.addCommentToRecipeHandler
 );
+recipeRouter.post("/:slug/like", RecipeController.addLikeToRecipeHandler);
 
 module.exports = recipeRouter;
