@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongo");
 const db = database.collection("recipes");
+const usersDb = database.collection("users");
 
 // Function to generate a slug from the title
 function generateSlug(title) {
@@ -14,14 +15,47 @@ async function createRecipe(recipeData) {
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
         slug: generateSlug(recipeData.title),
-        authorId: new ObjectId(recipeData.userId),
+        authorId: new ObjectId(recipeData.authorId), // Convert to ObjectId here
         likes: [],
         comments: [],
         createdAt: new Date(),
         updatedAt: new Date(),
     };
 
+    // Insert the new recipe
     const result = await db.insertOne(newRecipe);
+
+    if (result.insertedId) {
+        try {
+            const authorObjectId = new ObjectId(recipeData.authorId); // Convert to ObjectId here
+            console.log("Attempting to update user with ID:", authorObjectId); // Debug log
+
+            const user = await usersDb.findOne({
+                _id: new ObjectId(recipeData.authorId),
+            });
+            console.log(user);
+
+            const updateResult = await usersDb.updateOne(
+                { _id: authorObjectId },
+                { $push: { recipe: result.insertedId } }
+            );
+
+            if (updateResult.modifiedCount === 0) {
+                console.error(
+                    `Failed to update user with ID ${authorObjectId}. User may not exist.`
+                );
+            } else {
+                console.log(
+                    `Successfully added recipe ID ${result.insertedId} to user ${authorObjectId}.`
+                );
+            }
+        } catch (error) {
+            console.error(
+                "Error while updating user's recipe array:",
+                error.message
+            );
+        }
+    }
     return result;
 }
 

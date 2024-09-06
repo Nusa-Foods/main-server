@@ -4,19 +4,18 @@ const { verifyToken } = require("../utils/jsonwebtoken");
 module.exports = async function auth(req, res, next) {
     try {
         // const access_token = req.headers.authorization;
-        console.log(req.headers)
+
         const cookiesHeader = req.headers.cookie;
 
         if (!cookiesHeader) throw { name: "unAuthenticated" };
 
-        const cookies = cookiesHeader.split(';').reduce((acc, cookie) => {
-            const [name, value] = cookie.trim().split('=');
+        const cookies = cookiesHeader.split(";").reduce((acc, cookie) => {
+            const [name, value] = cookie.trim().split("=");
             acc[name] = decodeURIComponent(value);
             return acc;
         }, {});
 
         const access_token = cookies.Authorization;
-        console.log('Access token from cookies:', access_token);
 
         if (!access_token) throw { name: "unAuthenticated" };
 

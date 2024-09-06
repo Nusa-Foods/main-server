@@ -11,7 +11,7 @@ async function createForumHandler(req, res) {
             title: req.body.title,
             content: req.body.content,
             imageUrl: req.body.imageUrl,
-            createdBy: req.user.name, // Assuming user name is stored in req.user
+            createdBy: req.user.name,
         };
 
         const result = await createForum(forumData);

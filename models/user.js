@@ -7,16 +7,14 @@ async function createUser(userData) {
         username: userData.username,
         email: userData.email,
         password: hashPassword(userData.password),
+        imageUrl: userData.imageUrl,
+        event: [],
+        recipe: [],
         createdAt: new Date(),
         updatedAt: new Date(),
     };
     const result = await db.insertOne(newUser);
     return result;
-}
-
-async function getUserByEmail(email) {
-    const user = await db.findOne({ email: email });
-    return user;
 }
 
 async function getUserByEmail(email) {

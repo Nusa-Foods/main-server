@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const {
     createRecipe,
     getAllRecipes,
@@ -93,15 +94,20 @@ async function addRecipeHandler(req, res) {
         description: req.body.description,
         imgUrl: req.body.imgUrl,
         bannerUrl: req.body.bannerUrl,
-        authorId: user.userId,
+        authorId: user._id,
     };
 
     try {
         const result = await createRecipe(recipeData);
-        res.status(201).json({
-            message: "Recipe created successfully.",
-            recipeId: result.insertedId,
-        });
+
+        if (result.insertedId) {
+            res.status(201).json({
+                message: "Recipe created successfully.",
+                recipeId: result.insertedId,
+            });
+        } else {
+            throw new Error("Failed to create recipe.");
+        }
     } catch (error) {
         res.status(500).json({
             message: "Failed to create recipe.",

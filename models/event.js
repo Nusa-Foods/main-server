@@ -6,17 +6,16 @@ function generateSlug(title) {
     return title.toLowerCase().replace(/\s+/g, "-");
 }
 
-// Create a new event
 async function createEvent(eventData) {
     const newEvent = {
-        title: eventData.title.toUpperCase(), // Title in uppercase
-        slug: generateSlug(eventData.title), // Generate slug from title
+        title: eventData.title.toUpperCase(),
+        slug: generateSlug(eventData.title),
         description: eventData.description,
         imageUrl: eventData.imageUrl,
         createdAt: new Date(),
         updatedAt: new Date(),
-        attendance: [], // Default empty array for attendees
-        quota: eventData.quota, // Initial quota
+        attendance: [],
+        quota: eventData.quota,
     };
 
     const result = await db.insertOne(newEvent);
@@ -29,15 +28,12 @@ async function getAllEvents() {
     return events;
 }
 
-// Get event by slug
 async function getEventBySlug(slug) {
     const event = await db.findOne({ slug: slug });
     return event;
 }
 
-// Register attendance for an event
 async function registerAttendance(slug, userData) {
-    // Check if the user is already registered
     const event = await db.findOne({ slug: slug });
     if (
         event.attendance.some((attendee) => attendee.email === userData.email)
@@ -45,12 +41,10 @@ async function registerAttendance(slug, userData) {
         return { success: false, message: "User already registered" };
     }
 
-    // Check if there is available quota
     if (event.quota <= 0) {
         return { success: false, message: "No available spots" };
     }
 
-    // Register the user and decrease the quota
     const result = await db.updateOne(
         { slug: slug },
         {
