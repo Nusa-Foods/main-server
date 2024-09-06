@@ -66,11 +66,12 @@ async function registerAttendanceHandler(req, res) {
         const slug = req.params.slug;
         const userData = {
             name: req.user.name,
-            email: req.user.email, // User's email from req.user
+            email: req.user.email,
             registeredAt: new Date(),
         };
 
         const result = await registerAttendance(slug, userData);
+
         if (result.success) {
             res.status(201).json({ message: result.message });
         } else {

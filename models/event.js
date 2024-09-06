@@ -1,5 +1,6 @@
 const { database } = require("../config/mongo");
 const db = database.collection("events");
+const usersDb = database.collection("users");
 
 // Function to generate slug from title
 function generateSlug(title) {
@@ -35,6 +36,7 @@ async function getEventBySlug(slug) {
 
 async function registerAttendance(slug, userData) {
     const event = await db.findOne({ slug: slug });
+
     if (
         event.attendance.some((attendee) => attendee.email === userData.email)
     ) {
@@ -53,7 +55,22 @@ async function registerAttendance(slug, userData) {
         }
     );
 
-    return { success: true, message: "Registration successful" };
+    if (result.modifiedCount > 0) {
+        const userUpdateResult = await usersDb.updateOne(
+            { email: userData.email },
+            { $push: { event: event._id } }
+        );
+
+        if (userUpdateResult.modifiedCount > 0) {
+            return { success: true, message: "Registration successful" };
+        } else {
+            return {
+                success: false,
+                message: "Failed to update user's event list",
+            };
+        }
+    }
+    return { success: false, message: "Failed to register for the event" };
 }
 
 module.exports = {
