@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const {
     createRecipe,
     getAllRecipes,
@@ -7,6 +6,7 @@ const {
     getRecipesByNusaFood,
     updateRecipe,
     deleteRecipe,
+    addCommentToRecipe,
 } = require("../models/recipe");
 
 function validateRecipeInput(data) {
@@ -155,6 +155,36 @@ async function deleteRecipeHandler(req, res) {
     }
 }
 
+async function addCommentToRecipeHandler(req, res) {
+    const { slug } = req.params;
+    const { text } = req.body;
+    const username = req.user.username;
+
+    if (!text) {
+        return res.status(400).json({ message: "Comment text is required." });
+    }
+
+    const commentData = {
+        username,
+        text,
+    };
+
+    try {
+        const result = await addCommentToRecipe(slug, commentData);
+
+        if (result.modifiedCount === 1) {
+            res.status(200).json({ message: "Comment added successfully." });
+        } else {
+            res.status(404).json({ message: "Recipe not found." });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to add comment.",
+            error: error.message,
+        });
+    }
+}
+
 module.exports = {
     getAllRecipesHandler,
     getRecipesByUserIdHandler,
@@ -163,4 +193,5 @@ module.exports = {
     addRecipeHandler,
     updateRecipeHandler,
     deleteRecipeHandler,
+    addCommentToRecipeHandler,
 };

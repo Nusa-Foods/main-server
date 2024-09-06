@@ -8,14 +8,14 @@ function generateSlug(name) {
 
 async function createForum(forumData) {
     const newForum = {
-        title: forumData.title.toUpperCase(), // Title converted to uppercase
+        title: forumData.title.toUpperCase(),
         slug: generateSlug(forumData.title),
         content: forumData.content,
         imageUrl: forumData.imageUrl,
-        createdBy: forumData.createdBy, // From req.user
+        createdBy: forumData.createdBy,
         createdAt: new Date(),
         updatedAt: new Date(),
-        comments: [], // Default empty array for comments
+        comments: [],
     };
 
     const result = await db.insertOne(newForum);

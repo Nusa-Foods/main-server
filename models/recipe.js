@@ -15,7 +15,7 @@ async function createRecipe(recipeData) {
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
         slug: generateSlug(recipeData.title),
-        authorId: new ObjectId(recipeData.authorId), // Convert to ObjectId here
+        authorId: new ObjectId(recipeData.authorId),
         likes: [],
         comments: [],
         createdAt: new Date(),
@@ -27,8 +27,8 @@ async function createRecipe(recipeData) {
 
     if (result.insertedId) {
         try {
-            const authorObjectId = new ObjectId(recipeData.authorId); // Convert to ObjectId here
-            console.log("Attempting to update user with ID:", authorObjectId); // Debug log
+            const authorObjectId = new ObjectId(recipeData.authorId);
+            console.log("Attempting to update user with ID:", authorObjectId);
 
             const user = await usersDb.findOne({
                 _id: new ObjectId(recipeData.authorId),
@@ -100,6 +100,22 @@ async function deleteRecipe(slug) {
     return result;
 }
 
+async function addCommentToRecipe(slug, commentData) {
+    const newComment = {
+        _id: new ObjectId(),
+        username: commentData.username,
+        text: commentData.text,
+        createdAt: new Date(),
+    };
+
+    const result = await db.updateOne(
+        { slug: slug },
+        { $push: { comments: newComment } }
+    );
+
+    return result;
+}
+
 module.exports = {
     createRecipe,
     getAllRecipes,
@@ -108,4 +124,5 @@ module.exports = {
     getRecipesByNusaFood,
     updateRecipe,
     deleteRecipe,
+    addCommentToRecipe,
 };
