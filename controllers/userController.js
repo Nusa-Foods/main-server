@@ -3,6 +3,8 @@ const { validateUserData } = require("../utils/validation");
 const { comparePassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/jsonwebtoken");
 const { ObjectId } = require("mongodb");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client();
 
 const createUser = async (req, res) => {
     const { username, email, password } = req.body;
@@ -55,6 +57,30 @@ const login = async (req, res) => {
     }
 };
 
+const googleLogin = async (req, res, next) => {
+    const { googleToken } = req.body;
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: googleToken,
+            audience: process.env.GOOGLE_AUDIENCE,
+        });
+        const { email, name: username } = ticket.getPayload();
+        const password = Math.random().toString();
+
+        let user = await userModel.getUserByEmail(email);
+        if (!user) user = userModel.createUser({ username, email, password });
+        const accessToken = generateToken({
+            email: user.email,
+            _id: String(user._id),
+        });
+        res.status(200).json({
+            accessToken,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const logout = async (req, res) => {
     try {
         res.cookie("Authorization", "", {
@@ -84,4 +110,4 @@ const getUserByIdHandler = async (req, res) => {
     }
 };
 
-module.exports = { createUser, login, logout, getUserByIdHandler };
+module.exports = { createUser, login, googleLogin, logout, getUserByIdHandler };
