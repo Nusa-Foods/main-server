@@ -5,8 +5,6 @@ async function addBookmarkHandler(req, res) {
     const { slug } = req.body;
     const ownerEmail = req.user.email;
 
-    console.log(req.body);
-
     try {
         const result = await bookmarkModel.addBookmark(ownerEmail, slug);
 
