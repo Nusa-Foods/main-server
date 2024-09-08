@@ -1,4 +1,4 @@
-const nusaModel = require("../models/nusaModel");
+const nusaModel = require("../models/nusafood");
 
 // Controller for creating a new recipe
 async function createNusaHandler(req, res) {
