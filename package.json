@@ -15,12 +15,14 @@
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
+        "emailjs-com": "^3.2.0",
         "express": "^4.19.2",
         "google-auth-library": "^9.14.1",
         "groq-sdk": "^0.6.1",
         "install": "^0.13.0",
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.8.0",
-        "npm": "^10.8.3"
+        "npm": "^10.8.3",
+        "xhr2": "^0.2.1"
     }
 }

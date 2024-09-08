@@ -4,6 +4,7 @@ const { comparePassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/jsonwebtoken");
 const { ObjectId } = require("mongodb");
 const { OAuth2Client } = require("google-auth-library");
+const { sendMail } = require("../utils/email");
 const client = new OAuth2Client();
 
 const createUser = async (req, res) => {
@@ -21,6 +22,7 @@ const createUser = async (req, res) => {
 
     try {
         userModel.createUser({ username, email, password });
+        sendMail(email);
         res.status(201).json({ message: "Successfully Created User" });
     } catch (err) {
         res.status(500).json({ message: err.message });
