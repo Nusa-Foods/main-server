@@ -13,7 +13,7 @@ const recipeGenerator = async (ingredients, retries = 5) => {
                 messages: [
                     {
                         role: "user",
-                        content: `{\n"name": "recipe name", \n"imgUrl": "fill with empty string", \n"ingredients": [[\'how much\', 'ingredients name']],\n"guide": "in markdown format"\n}\n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
+                        content: `{\n"title": "recipe name", \n"description": "short recipe description", \n"imgUrl": "fill with empty string", \n"ingredients": [[\'how much\', 'ingredients name']],\n"guide": "in markdown format"\n}\n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
                     },
                 ],
                 model: "llama3-8b-8192",
@@ -27,7 +27,7 @@ const recipeGenerator = async (ingredients, retries = 5) => {
                 stop: null,
             });
             response = JSON.parse(response.choices[0].message.content);
-            let img = await imgSearch(response.name);
+            let img = await imgSearch(response.title);
             img = img.photos[0].src.large;
             response.imgUrl = img;
             return response;
