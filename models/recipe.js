@@ -104,6 +104,7 @@ async function addCommentToRecipe(slug, commentData) {
     const newComment = {
         _id: new ObjectId(),
         username: commentData.username,
+        imageUrl: commentData.imageUrl,
         text: commentData.text,
         createdAt: new Date(),
     };
