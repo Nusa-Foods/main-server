@@ -6,14 +6,23 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const model = "mixtral-8x7b-32768"; // mixtral
 const { imgSearch } = require("../utils/pexel");
 
-const recipeGenerator = async (ingredients, retries = 5) => {
+const recipeGenerator = async (ingredients, retries = 50) => {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
             let response = await groq.chat.completions.create({
                 messages: [
                     {
                         role: "user",
-                        content: `{\n"title": "recipe name", \n"description": "short recipe description", \n"imgUrl": "fill with empty string", \n"ingredients": [[\'how much\', 'ingredients name']],\n"guide": "in markdown format"\n}\n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
+                        content: `
+                            {
+                                \n"title": "recipe name", 
+                                \n"description": "short recipe description", 
+                                \n"imgUrl": "fill with empty string", 
+                                \n"ingredients": [[\'how much\', 'ingredients name']], 
+                                \n"nutriens": [[\'how much\', 'nutriens name']],
+                                \n"guide": "Step-by-step cooking instructions formatted in Markdown for better readability"\n
+                            }
+                            \n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
                     },
                 ],
                 model: "llama3-8b-8192",
