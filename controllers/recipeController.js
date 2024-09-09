@@ -166,6 +166,7 @@ async function addCommentToRecipeHandler(req, res) {
     const { slug } = req.params;
     const { text } = req.body;
     const username = req.user.username;
+    const imageUrl = req.user.imageUrl;
 
     if (!text) {
         return res.status(400).json({ message: "Comment text is required." });
@@ -173,6 +174,7 @@ async function addCommentToRecipeHandler(req, res) {
 
     const commentData = {
         username,
+        imageUrl,
         text,
     };
 
