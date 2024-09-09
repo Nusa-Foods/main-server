@@ -3,6 +3,7 @@ const {
     getAllEvents,
     getEventBySlug,
     registerAttendance,
+    cancelAttendance,
 } = require("../models/event");
 
 // Create a new event
@@ -85,9 +86,33 @@ async function registerAttendanceHandler(req, res) {
     }
 }
 
+async function cancelAttendanceHandler(req, res) {
+    try {
+        const slug = req.params.slug;
+        const userData = {
+            name: req.user.name,
+            email: req.user.email,
+        };
+
+        const result = await cancelAttendance(slug, userData);
+
+        if (result.success) {
+            res.status(200).json({ message: result.message });
+        } else {
+            res.status(400).json({ message: result.message });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to cancel attendance",
+            error: error.message,
+        });
+    }
+}
+
 module.exports = {
     createEventHandler,
     getAllEventsHandler,
     getEventBySlugHandler,
     registerAttendanceHandler,
+    cancelAttendanceHandler,
 };

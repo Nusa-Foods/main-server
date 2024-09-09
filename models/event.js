@@ -73,9 +73,59 @@ async function registerAttendance(slug, userData) {
     return { success: false, message: "Failed to register for the event" };
 }
 
+async function cancelAttendance(slug, userData) {
+    // Find the event by its slug
+    const event = await db.findOne({ slug: slug });
+
+    if (!event) {
+        return { success: false, message: "Event not found" };
+    }
+
+    // Check if the user is registered for the event
+    const isUserRegistered = event.attendance.some(
+        (attendee) => attendee.email === userData.email
+    );
+
+    if (!isUserRegistered) {
+        return {
+            success: false,
+            message: "User is not registered for this event",
+        };
+    }
+
+    const result = await db.updateOne(
+        { slug: slug },
+        {
+            $pull: { attendance: { email: userData.email } },
+            $set: { updatedAt: new Date(), quota: event.quota + 1 },
+        }
+    );
+
+    if (result.modifiedCount > 0) {
+        // Remove the event reference from the user's list of events
+        const userUpdateResult = await usersDb.updateOne(
+            { email: userData.email },
+            { $pull: { event: event._id } }
+        );
+
+        if (userUpdateResult.modifiedCount > 0) {
+            return { success: true, message: "Cancellation successful" };
+        } else {
+            return {
+                success: false,
+                message: "Failed to update user's event list",
+            };
+        }
+    }
+    return {
+        success: false,
+        message: "Failed to cancel attendance for the event",
+    };
+}
 module.exports = {
     createEvent,
     getAllEvents,
     getEventBySlug,
     registerAttendance,
+    cancelAttendance,
 };
