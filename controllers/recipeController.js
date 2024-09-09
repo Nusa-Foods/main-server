@@ -30,7 +30,12 @@ function validateRecipeInput(data) {
 // GET /recipe
 async function getAllRecipesHandler(req, res) {
     try {
-        const recipes = await getAllRecipes();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 8;
+
+        const skip = (page - 1) * limit;
+
+        const recipes = await getAllRecipes(skip, limit);
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({

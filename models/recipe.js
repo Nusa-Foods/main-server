@@ -59,8 +59,8 @@ async function createRecipe(recipeData) {
     return result;
 }
 
-async function getAllRecipes() {
-    const recipes = await db.find().toArray();
+async function getAllRecipes(skip, limit) {
+    const recipes = await db.find().skip(skip).limit(limit).toArray();
     return recipes;
 }
 
