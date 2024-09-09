@@ -46,7 +46,7 @@ async function getAllRecipesHandler(req, res) {
 }
 
 async function getRecipesByUserIdHandler(req, res) {
-    const userId = req.user.id;
+    const userId = req.user._id;
     try {
         const recipes = await getRecipesByUserId(userId);
         res.status(200).json(recipes);

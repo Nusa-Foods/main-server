@@ -37,7 +37,15 @@ async function createRecipe(recipeData) {
 
             const updateResult = await usersDb.updateOne(
                 { _id: authorObjectId },
-                { $push: { recipe: result.insertedId } }
+                {
+                    $push: {
+                        recipe: {
+                            title: recipeData.title,
+                            slug: generateSlug(recipeData.title),
+                            imgUrl: recipeData.imgUrl,
+                        },
+                    },
+                }
             );
 
             if (updateResult.modifiedCount === 0) {
