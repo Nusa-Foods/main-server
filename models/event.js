@@ -13,10 +13,12 @@ async function createEvent(eventData) {
         slug: generateSlug(eventData.title),
         description: eventData.description,
         imageUrl: eventData.imageUrl,
+        quota: eventData.quota,
+        location: eventData.location,
+        locUrl: eventData.locUrl,
+        attendance: [],
         createdAt: new Date(),
         updatedAt: new Date(),
-        attendance: [],
-        quota: eventData.quota,
     };
 
     const result = await db.insertOne(newEvent);
