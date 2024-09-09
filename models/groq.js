@@ -4,15 +4,16 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // const model = "llama3-groq-8b-8192-tool-use-preview"; // meta x groq
 // const model = "gemma2-9b-it"; // google
 const model = "mixtral-8x7b-32768"; // mixtral
+const { imgSearch } = require("../utils/pexel");
 
 const recipeGenerator = async (ingredients, retries = 5) => {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
-            const response = await groq.chat.completions.create({
+            let response = await groq.chat.completions.create({
                 messages: [
                     {
                         role: "user",
-                        content: `{\n"name": "recipe name", \n"imgUrl": "google image search for this name", \n"ingredients": [[\'how much\', 'ingredients name']],\n"guide": "in markdown format"\n}\n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
+                        content: `{\n"name": "recipe name", \n"imgUrl": "fill with empty string", \n"ingredients": [[\'how much\', 'ingredients name']],\n"guide": "in markdown format"\n}\n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
                     },
                 ],
                 model: "llama3-8b-8192",
@@ -25,9 +26,11 @@ const recipeGenerator = async (ingredients, retries = 5) => {
                 },
                 stop: null,
             });
-
-            // If the response is successful, parse and return it
-            return JSON.parse(response.choices[0].message.content);
+            response = JSON.parse(response.choices[0].message.content);
+            let img = await imgSearch(response.name);
+            img = img.photos[0].src.large;
+            response.imgUrl = img;
+            return response;
         } catch (error) {
             console.error(`Attempt ${attempt + 1} failed:`, error);
             if (attempt === retries - 1) {
