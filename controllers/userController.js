@@ -112,4 +112,43 @@ const getUserByIdHandler = async (req, res) => {
     }
 };
 
-module.exports = { createUser, login, googleLogin, logout, getUserByIdHandler };
+const updateUser = async (req, res) => {
+    const email = req.user.email;
+    const { username, bio, imageUrl } = req.body;
+
+    if (!username && !bio && !imageUrl) {
+        return res.status(400).json({
+            message:
+                "At least one field (username, bio, imageUrl) must be provided for update.",
+        });
+    }
+
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (bio) updateData.bio = bio;
+    if (imageUrl) updateData.imageUrl = imageUrl;
+
+    try {
+        const result = await userModel.updateUserByEmail(email, updateData);
+
+        if (!result) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to update user",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = {
+    createUser,
+    login,
+    googleLogin,
+    logout,
+    getUserByIdHandler,
+    updateUser,
+};

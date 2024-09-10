@@ -8,6 +8,7 @@ async function createUser(userData) {
         email: userData.email,
         password: hashPassword(userData.password),
         imageUrl: userData.imageUrl,
+        bio: "Please Update Your bio",
         event: [],
         recipe: [],
         createdAt: new Date(),
@@ -45,4 +46,23 @@ async function getUserById(id) {
     }
 }
 
-module.exports = { createUser, getUserByEmail, getUserById };
+async function updateUserByEmail(email, updateData) {
+    try {
+        const result = await db.updateOne(
+            { email: email },
+            {
+                $set: {
+                    ...updateData,
+                    updatedAt: new Date(),
+                },
+            }
+        );
+
+        return result.matchedCount > 0 ? result : null;
+    } catch (error) {
+        console.error("Error while updating user by email:", error.message);
+        throw error;
+    }
+}
+
+module.exports = { createUser, getUserByEmail, getUserById, updateUserByEmail };
