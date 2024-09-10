@@ -101,6 +101,7 @@ async function addRecipeHandler(req, res) {
         description: req.body.description,
         imgUrl: req.body.imgUrl,
         bannerUrl: req.body.bannerUrl,
+        guide: req.body.guide,
         authorId: user._id,
     };
 

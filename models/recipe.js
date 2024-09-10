@@ -12,6 +12,7 @@ async function createRecipe(recipeData) {
     const newRecipe = {
         title: recipeData.title,
         description: recipeData.description,
+        guide: recipeData.guide,
         imgUrl: recipeData.imgUrl,
         bannerUrl: recipeData.bannerUrl,
         slug: generateSlug(recipeData.title),
