@@ -14,6 +14,7 @@ async function createEvent(eventData) {
         description: eventData.description,
         imageUrl: eventData.imageUrl,
         quota: eventData.quota,
+        date: eventData.date,
         location: eventData.location,
         locUrl: eventData.locUrl,
         attendance: [],

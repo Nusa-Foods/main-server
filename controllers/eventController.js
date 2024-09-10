@@ -13,6 +13,7 @@ async function createEventHandler(req, res) {
             title: req.body.title,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
+            date: req.body.date,
             location: req.body.location,
             locUrl: req.body.locUrl,
             quota: req.body.quota,
