@@ -34,7 +34,7 @@ module.exports = async function auth(req, res, next) {
     } catch (error) {
         // console.log(error);
         if (error.name === "unAuthenticated")
-            return res.status(404).json({ message: "You are not authorized" });
+            return res.status(401).json({ message: "You are not authorized" });
         res.status(500).json({ message: "internal sever error" });
     }
 };

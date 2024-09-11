@@ -40,11 +40,11 @@ async function getEventBySlug(slug) {
 async function registerAttendance(slug, userData) {
     const event = await db.findOne({ slug: slug });
 
-    if (
-        event.attendance.some((attendee) => attendee.email === userData.email)
-    ) {
-        return { success: false, message: "User already registered" };
-    }
+    // if (
+    //     event.attendance.some((attendee) => attendee.email === userData.email)
+    // ) {
+    //     return { success: false, message: "User already registered" };
+    // }
 
     if (event.quota <= 0) {
         return { success: false, message: "No available spots" };
@@ -66,11 +66,6 @@ async function registerAttendance(slug, userData) {
 
         if (userUpdateResult.modifiedCount > 0) {
             return { success: true, message: "Registration successful" };
-        } else {
-            return {
-                success: false,
-                message: "Failed to update user's event list",
-            };
         }
     }
     return { success: false, message: "Failed to register for the event" };
@@ -113,11 +108,6 @@ async function cancelAttendance(slug, userData) {
 
         if (userUpdateResult.modifiedCount > 0) {
             return { success: true, message: "Cancellation successful" };
-        } else {
-            return {
-                success: false,
-                message: "Failed to update user's event list",
-            };
         }
     }
     return {

@@ -129,6 +129,14 @@ describe("User API tests", () => {
         expect(res.body).toHaveProperty("username", "testuser");
     });
 
+    // Test fetching user by ID (not found)
+    it("GET /:id - Should fetch user by ID", async () => {
+        const res = await request(app).get(`/user/9`);
+
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty("message", "Failed to retrieve user");
+    });
+
     // Test updating user (with authentication)
     it("PUT /update - Should update user profile", async () => {
         const res = await request(app)
@@ -145,6 +153,19 @@ describe("User API tests", () => {
         const updatedUser = await db.findOne({ email: "testuser@example.com" });
         expect(updatedUser.username).toBe("updateduser");
         expect(updatedUser.bio).toBe("This is my updated bio.");
+    });
+
+    // Test updating user (with authentication)
+    it("PUT /update - Should update user profile", async () => {
+        const res = await request(app)
+            .put("/user/update")
+            .set("Cookie", `Authorization=Bearer ${token}`)
+            .send({});
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty(
+            "message",
+            "At least one field (username, bio, imageUrl) must be provided for update."
+        );
     });
 
     // Test logout

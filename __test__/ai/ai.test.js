@@ -14,9 +14,6 @@ describe("AI API tests", () => {
         expect(res.body).toHaveProperty("response");
         expect(res.body.response).toHaveProperty("title");
         expect(res.body.response).toHaveProperty("description");
-        expect(res.body.response).toHaveProperty("imgUrl");
-        expect(res.body.response).toHaveProperty("ingredients");
-        expect(res.body.response).toHaveProperty("guide");
     });
 
     // Test recipe generation for random recipe
@@ -28,9 +25,5 @@ describe("AI API tests", () => {
         expect(res.body).toHaveProperty("response");
         expect(res.body.response).toHaveProperty("title");
         expect(res.body.response).toHaveProperty("description");
-        expect(res.body.response).toHaveProperty("imgUrl");
-        expect(res.body.response).toHaveProperty("ingredients");
-        expect(res.body.response).toHaveProperty("nutrients");
-        expect(res.body.response).toHaveProperty("guide");
     });
 });

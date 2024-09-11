@@ -24,45 +24,36 @@ async function getUserByEmail(email) {
 }
 
 async function getUserById(id) {
-    try {
-        const users = await db
-            .aggregate([
-                { $match: { _id: id } },
-                {
-                    $lookup: {
-                        from: "recipes",
-                        localField: "_id",
-                        foreignField: "authorId",
-                        as: "user_recipes",
-                    },
+    const users = await db
+        .aggregate([
+            { $match: { _id: id } },
+            {
+                $lookup: {
+                    from: "recipes",
+                    localField: "_id",
+                    foreignField: "authorId",
+                    as: "user_recipes",
                 },
-            ])
-            .toArray();
+            },
+        ])
+        .toArray();
 
-        return users.length > 0 ? users[0] : null;
-    } catch (error) {
-        // console.error("Error while retrieving user by ID:", error.message);
-        throw error;
-    }
+    return users.length > 0 ? users[0] : null;
 }
 
 async function updateUserByEmail(email, updateData) {
-    try {
-        const result = await db.updateOne(
-            { email: email },
-            {
-                $set: {
-                    ...updateData,
-                    updatedAt: new Date(),
-                },
-            }
-        );
+    console.log("sebenernya tuh jalan ges");
+    const result = await db.updateOne(
+        { email: email },
+        {
+            $set: {
+                ...updateData,
+                updatedAt: new Date(),
+            },
+        }
+    );
 
-        return result.matchedCount > 0 ? result : null;
-    } catch (error) {
-        // console.error("Error while updating user by email:", error.message);
-        throw error;
-    }
+    return result.matchedCount > 0 ? result : null;
 }
 
 module.exports = { createUser, getUserByEmail, getUserById, updateUserByEmail };

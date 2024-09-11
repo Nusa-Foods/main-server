@@ -5,27 +5,24 @@ const { database } = require("../../config/mongo");
 const bookmarksCollection = database.collection("bookmarks");
 const recipesCollection = database.collection("recipes");
 
-let token; // To store the token for authenticated requests
-let user; // To store user details for setting ownerEmail in bookmarks
+let token;
+let user;
 
 beforeAll(async () => {
-    // Register a new user before running the tests
     await request(app).post("/user/register").send({
         username: "testuser",
         email: "testuser@example.com",
         password: "password123",
     });
 
-    // Login to retrieve the token
     const loginRes = await request(app).post("/user/login").send({
         email: "testuser@example.com",
         password: "password123",
     });
 
-    token = loginRes.body.accessToken; // Save the token
-    user = loginRes.body.user; // Save user data if you need it
+    token = loginRes.body.accessToken;
+    user = loginRes.body.user;
 
-    // Add a dummy recipe for testing purposes
     await recipesCollection.insertOne({
         title: "Test Recipe",
         slug: "test-recipe",
@@ -35,14 +32,12 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    // Clean up the database and close the connection
     await bookmarksCollection.deleteMany({});
     await recipesCollection.deleteMany({});
     await database.client.close();
 });
 
 describe("Bookmarks API tests", () => {
-    // Test adding a bookmark
     it("POST /bookmarks - Should add a bookmark", async () => {
         const res = await request(app)
             .post("/bookmarks/")
@@ -55,7 +50,6 @@ describe("Bookmarks API tests", () => {
         );
     });
 
-    // Test adding a duplicate bookmark
     it("POST /bookmarks - Should return error for already bookmarked recipe", async () => {
         const res = await request(app)
             .post("/bookmarks/")
@@ -69,18 +63,16 @@ describe("Bookmarks API tests", () => {
         );
     });
 
-    // Test getting bookmarks
     it("GET /bookmarks - Should retrieve all bookmarks", async () => {
         const res = await request(app)
             .get("/bookmarks/")
             .set("Cookie", `Authorization=Bearer ${token}`);
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveLength(1); // There should be one bookmark
+        expect(res.body).toHaveLength(1);
         expect(res.body[0].bookmarkedRecipes[0].slug).toBe("test-recipe");
     });
 
-    // Test removing a bookmark
     it("DELETE /bookmarks - Should remove a bookmark", async () => {
         const res = await request(app)
             .delete("/bookmarks/")
@@ -94,7 +86,6 @@ describe("Bookmarks API tests", () => {
         );
     });
 
-    // Test removing a non-existent bookmark
     it("DELETE /bookmarks - Should return error for non-existent bookmark", async () => {
         const res = await request(app)
             .delete("/bookmarks/")
@@ -105,13 +96,35 @@ describe("Bookmarks API tests", () => {
         expect(res.body).toHaveProperty("message", "Bookmark not found.");
     });
 
-    // Test getting bookmarks after removal
     it("GET /bookmarks - Should return an empty array after bookmark removal", async () => {
         const res = await request(app)
             .get("/bookmarks/")
             .set("Cookie", `Authorization=Bearer ${token}`);
 
         expect(res.statusCode).toBe(200);
-        expect(res.body[0].bookmarks).toHaveLength(0); // No bookmarks should be found
+        expect(res.body[0].bookmarks).toHaveLength(0);
+    });
+
+    // New test to verify bookmark availability
+    it("POST /bookmarks - Should not add duplicate bookmark and validate bookmark existence", async () => {
+        // Add a new bookmark
+        const addRes = await request(app)
+            .post("/bookmarks/")
+            .set("Cookie", `Authorization=Bearer ${token}`)
+            .send({ slug: "test-recipe" });
+        expect(addRes.statusCode).toBe(200);
+
+        // Try to add the same bookmark again
+        const duplicateRes = await request(app)
+            .post("/bookmarks/")
+            .set("Cookie", `Authorization=Bearer ${token}`)
+            .send({ slug: "test-recipe" });
+
+        // Check that it returns the correct error for already bookmarked
+        expect(duplicateRes.statusCode).toBe(400);
+        expect(duplicateRes.body).toHaveProperty(
+            "message",
+            "Recipe is already bookmarked."
+        );
     });
 });

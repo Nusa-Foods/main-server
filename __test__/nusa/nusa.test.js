@@ -80,6 +80,16 @@ describe("Nusa Routes", () => {
         expect(res.body).toHaveProperty("title", "Test Nusa Recipe");
     });
 
+    // // Test GET /nusa/:slug (not found)
+    it("should retrieve a Nusa recipe by slug", async () => {
+        const res = await request(app)
+            .get("/nusa/test-nusa-recipeee")
+            .set("Cookie", `token=${token}`);
+
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty("message", "Recipe not found.");
+    });
+
     // Test DELETE /nusa
     it("should delete a Nusa recipe by slug", async () => {
         const res = await request(app)

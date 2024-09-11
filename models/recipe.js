@@ -27,43 +27,13 @@ async function createRecipe(recipeData) {
     const result = await db.insertOne(newRecipe);
 
     if (result.insertedId) {
-        try {
-            const authorObjectId = new ObjectId(recipeData.authorId);
-            console.log("Attempting to update user with ID:", authorObjectId);
+        const authorObjectId = new ObjectId(recipeData.authorId);
+        console.log("Attempting to update user with ID:", authorObjectId);
 
-            const user = await usersDb.findOne({
-                _id: new ObjectId(recipeData.authorId),
-            });
-            console.log(user);
-
-            const updateResult = await usersDb.updateOne(
-                { _id: authorObjectId },
-                {
-                    $push: {
-                        recipe: {
-                            title: recipeData.title,
-                            slug: generateSlug(recipeData.title),
-                            imgUrl: recipeData.imgUrl,
-                        },
-                    },
-                }
-            );
-
-            if (updateResult.modifiedCount === 0) {
-                console.error(
-                    `Failed to update user with ID ${authorObjectId}. User may not exist.`
-                );
-            } else {
-                console.log(
-                    `Successfully added recipe ID ${result.insertedId} to user ${authorObjectId}.`
-                );
-            }
-        } catch (error) {
-            console.error(
-                "Error while updating user's recipe array:",
-                error.message
-            );
-        }
+        const user = await usersDb.findOne({
+            _id: new ObjectId(recipeData.authorId),
+        });
+        console.log(user);
     }
     return result;
 }

@@ -43,7 +43,7 @@ describe("Event API tests", () => {
                 date: new Date().toISOString(),
                 location: "Test Location",
                 locUrl: "http://example.com/location",
-                quota: 100,
+                quota: 1,
             });
 
         expect(res.statusCode).toBe(201);
@@ -84,9 +84,25 @@ describe("Event API tests", () => {
                 name: "Test User",
                 email: "testuser@example.com",
             });
-        console.log("debug", res.body);
         expect(res.statusCode).toBe(201);
         expect(res.body).toHaveProperty("message");
+        expect(res.body.message).toBe("Registration successful");
+    });
+
+    // Test event registration (assuming the user is already registered)
+    it("POST /event/:slug/register - Should cant double register for an event", async () => {
+        const slug = "test-event"; // Adjust based on your event slug generation
+        const res = await request(app)
+            .post(`/event/${slug}/register`)
+            .set("Cookie", `Authorization=Bearer ${token}`)
+            .send({
+                name: "Test User",
+                email: "testuser@example.com",
+            });
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message");
+        expect(res.body).toHaveProperty("message");
+        expect(res.body.message).toBe("No available spots");
     });
 
     // Test event cancellation

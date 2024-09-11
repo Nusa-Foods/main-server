@@ -20,46 +20,26 @@ async function createNusa(recipeData) {
         updatedAt: new Date(),
     };
 
-    try {
-        const result = await db.insertOne(newRecipe);
-        return result;
-    } catch (error) {
-        console.error("Error while creating a recipe:", error.message);
-        throw error;
-    }
+    const result = await db.insertOne(newRecipe);
+    return result;
 }
 
 // Get all recipes
 async function getAllNusa() {
-    try {
-        const recipes = await db.find().toArray();
-        return recipes;
-    } catch (error) {
-        console.error("Error while retrieving all recipes:", error.message);
-        throw error;
-    }
+    const recipes = await db.find().toArray();
+    return recipes;
 }
 
 // Get a recipe by its slug
 async function getNusaBySlug(slug) {
-    try {
-        const recipe = await db.findOne({ slug: slug });
-        return recipe;
-    } catch (error) {
-        console.error("Error while retrieving recipe by slug:", error.message);
-        throw error;
-    }
+    const recipe = await db.findOne({ slug: slug });
+    return recipe;
 }
 
 // Delete a recipe by its slug
 async function deleteNusa(slug) {
-    try {
-        const result = await db.deleteOne({ slug: slug });
-        return result;
-    } catch (error) {
-        console.error("Error while deleting recipe:", error.message);
-        throw error;
-    }
+    const result = await db.deleteOne({ slug: slug });
+    return result;
 }
 
 module.exports = {
