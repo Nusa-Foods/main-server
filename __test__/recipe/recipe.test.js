@@ -58,12 +58,24 @@ describe("Recipe Tests", () => {
         expect(res.body[0].title).toBe("Test Recipe");
     });
 
-    it("should retrieve all recipes", async () => {
+    it("should retrieve all nusafood recipes", async () => {
         const res = await request(app)
             .get("/recipe/nusafood")
             .set("Cookie", cookie) // Include the cookie for authentication
             .expect(200);
 
+        expect(res.body).toBeInstanceOf(Array);
+    });
+
+    it("should retrieve a recipe by userId", async () => {
+        const user = await database
+            .collection("users")
+            .findOne({ email: "testuser@example.com" });
+        const userId = String(user._id);
+        const res = await request(app)
+            .get(`/recipe/byId/${userId}`)
+            .set("Cookie", cookie) // Include the cookie for authentication
+            .expect(200);
         expect(res.body).toBeInstanceOf(Array);
     });
 

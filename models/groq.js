@@ -18,7 +18,7 @@ const recipeGenerator = async (ingredients, retries = 50) => {
                                 \n"nutriens": [[\'how much\', 'nutriens name']],
                                 \n"guide": "Step-by-step cooking instructions formatted in Markdown for better readability"\n
                             }
-                            \n\ngive me json format for recipe that use this ingredients. ${ingredients}`,
+                            \n\ngive me json format for recipe that use this ingredients. ${ingredients}. give all the output in Bahasa indonesia`,
                     },
                 ],
                 model: "llama3-8b-8192",
