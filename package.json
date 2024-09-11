@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "npx jest --watchAll --detectOpenHandles --forceExit --runInBand --verbose",
+        "complete_test": "npx jest --silent --detectOpenHandles --forceExit --runInBand --coverage",
         "dev": "node --watch bin/www"
     },
     "keywords": [],

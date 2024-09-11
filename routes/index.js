@@ -10,11 +10,11 @@ const adminRouter = require("./adminRouter");
 const routes = express.Router();
 
 routes.use("/user", userRouter); // test done
-routes.use("/ai", aiRouter);
+routes.use("/ai", aiRouter); // test done
 routes.use("/recipe", authentication, recipeRouter); //test done
-routes.use("/event", authentication, eventRouter);
+routes.use("/event", authentication, eventRouter); // test done
 routes.use("/bookmarks", authentication, booksRouter); // test done
-routes.use("/nusa", nusaRouter);
+routes.use("/nusa", nusaRouter); // test done
 routes.use("/admin", adminRouter); // test done
 
 module.exports = routes;

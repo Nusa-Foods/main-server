@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
     const errors = validateUserData({ username, email, password });
 
     if (errors.length > 0)
-        return res.status(400).json({ message: "Validation Error", errors });
+        return res.status(400).json({ message: errors, errors });
 
     try {
         userModel.createUser({ username, email, password });

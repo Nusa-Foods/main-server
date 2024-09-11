@@ -4,6 +4,7 @@ const { database } = require("../../config/mongo");
 
 const bookmarksCollection = database.collection("bookmarks");
 const recipesCollection = database.collection("recipes");
+const userDb = database.collection("users");
 
 let token; // To store the token for authenticated requests
 let user; // To store user details for setting ownerEmail in bookmarks
@@ -42,6 +43,7 @@ afterAll(async () => {
     // Clean up the database and close the connection
     await bookmarksCollection.deleteMany({});
     await recipesCollection.deleteMany({});
+    await userDb.deleteMany({});
     await database.client.close();
 });
 
@@ -54,6 +56,15 @@ describe("Recipe Tests", () => {
 
         expect(res.body).toBeInstanceOf(Array);
         expect(res.body[0].title).toBe("Test Recipe");
+    });
+
+    it("should retrieve all recipes", async () => {
+        const res = await request(app)
+            .get("/recipe/nusafood")
+            .set("Cookie", cookie) // Include the cookie for authentication
+            .expect(200);
+
+        expect(res.body).toBeInstanceOf(Array);
     });
 
     it("should retrieve a recipe by slug", async () => {
@@ -121,6 +132,38 @@ describe("Recipe Tests", () => {
         expect(res.body).toHaveProperty(
             "message",
             "Recipe updated successfully."
+        );
+    });
+
+    it("should add comment", async () => {
+        const newRecipe = {
+            text: "halo bang",
+        };
+
+        const res = await request(app)
+            .post("/recipe/test-recipe/comments")
+            .set("Cookie", cookie) // Include the cookie for authentication
+            .send(newRecipe)
+            .expect(200);
+        expect(res.body).toHaveProperty(
+            "message",
+            "Comment added successfully."
+        );
+    });
+
+    it("should add like", async () => {
+        const newRecipe = {
+            text: "halo bang",
+        };
+
+        const res = await request(app)
+            .post("/recipe/test-recipe/like")
+            .set("Cookie", cookie) // Include the cookie for authentication
+            .send(newRecipe)
+            .expect(200);
+        expect(res.body).toHaveProperty(
+            "message",
+            "Recipe liked successfully."
         );
     });
 

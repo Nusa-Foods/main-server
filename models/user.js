@@ -41,7 +41,7 @@ async function getUserById(id) {
 
         return users.length > 0 ? users[0] : null;
     } catch (error) {
-        console.error("Error while retrieving user by ID:", error.message);
+        // console.error("Error while retrieving user by ID:", error.message);
         throw error;
     }
 }
@@ -60,7 +60,7 @@ async function updateUserByEmail(email, updateData) {
 
         return result.matchedCount > 0 ? result : null;
     } catch (error) {
-        console.error("Error while updating user by email:", error.message);
+        // console.error("Error while updating user by email:", error.message);
         throw error;
     }
 }

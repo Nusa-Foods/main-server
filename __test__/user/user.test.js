@@ -4,6 +4,10 @@ const { database } = require("../../config/mongo");
 
 const db = database.collection("users");
 
+beforeAll(async () => {
+    await db.deleteMany({});
+});
+
 afterAll(async () => {
     // Clean up the database and close the connection
     await db.deleteMany({});
@@ -13,6 +17,61 @@ afterAll(async () => {
 describe("User API tests", () => {
     let token;
 
+    // Test registration with missing fields
+    it("POST /register - Should return error if username is missing", async () => {
+        const res = await request(app).post("/user/register").send({
+            email: "testuser@example.com",
+            password: "password123",
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", ["Username is required"]);
+    });
+
+    it("POST /register - Should return error if email is missing", async () => {
+        const res = await request(app).post("/user/register").send({
+            username: "testuser",
+            password: "password123",
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", ["Email is required"]);
+    });
+
+    it("POST /register - Should return error if email is invalid", async () => {
+        const res = await request(app).post("/user/register").send({
+            username: "testuser",
+            email: "invalid-email",
+            password: "password123",
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", ["Email is not valid"]);
+    });
+
+    it("POST /register - Should return error if password is missing", async () => {
+        const res = await request(app).post("/user/register").send({
+            username: "testuser",
+            email: "testuser@example.com",
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", ["Password is required"]);
+    });
+
+    it("POST /register - Should return error if password is too short", async () => {
+        const res = await request(app).post("/user/register").send({
+            username: "testuser",
+            email: "testuser@example.com",
+            password: "short",
+        });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", [
+            "Password must be at least 6 characters long",
+        ]);
+    });
+
     // Test registration
     it("POST /register - Should create a new user", async () => {
         const res = await request(app).post("/user/register").send({
@@ -21,6 +80,7 @@ describe("User API tests", () => {
             password: "password123",
         });
 
+        console.log("this is response", res.body);
         expect(res.statusCode).toBe(201);
         expect(res.body).toHaveProperty("message", "Successfully Created User");
     });
@@ -78,7 +138,6 @@ describe("User API tests", () => {
                 username: "updateduser",
                 bio: "This is my updated bio.",
             });
-        console.log("this is response", res.body);
         expect(res.statusCode).toBe(200);
         expect(res.body).toHaveProperty("message", "User updated successfully");
 
