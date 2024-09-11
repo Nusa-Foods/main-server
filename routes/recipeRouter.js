@@ -4,7 +4,7 @@ const RecipeController = require("../controllers/recipeController");
 
 // Define routes for recipe operations
 recipeRouter.get("/", RecipeController.getAllRecipesHandler);
-recipeRouter.get("/owned", RecipeController.getRecipesByUserIdHandler);
+recipeRouter.get("/byId/:userId", RecipeController.getRecipesByUserIdHandler);
 recipeRouter.get("/nusafood", RecipeController.getRecipesByNusaFoodHandler);
 recipeRouter.get("/:slug", RecipeController.getRecipeBySlugHandler);
 recipeRouter.post("/", RecipeController.addRecipeHandler);
