@@ -13,7 +13,6 @@ async function sendMail(email) {
             },
             process.env.EMAIL_API
         );
-        console.log("SUCCESS SENDING EMAIL CREATION!");
     } catch (err) {
         console.log("ERROR", err);
     }

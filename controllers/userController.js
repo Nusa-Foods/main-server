@@ -39,7 +39,7 @@ const login = async (req, res) => {
 
         const isValidPassword = comparePassword(password, user.password);
 
-        if (!isValidPassword) throw { message: "Wrong Password" };
+        if (!isValidPassword) throw { message: "unAuthenticated" };
 
         const token = generateToken({
             email: user.email,

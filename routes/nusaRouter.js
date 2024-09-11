@@ -5,6 +5,6 @@ const nusaController = require("../controllers/nusaController");
 nusaRouter.post("/", nusaController.createNusaHandler);
 nusaRouter.get("/", nusaController.getAllNusaHandler);
 nusaRouter.get("/:slug", nusaController.getNusaBySlugHandler);
-nusaRouter.delete("/", nusaController.deleteNusaHandler);
+nusaRouter.delete("/:slug", nusaController.deleteNusaHandler);
 
 module.exports = nusaRouter;
