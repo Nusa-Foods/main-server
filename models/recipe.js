@@ -22,24 +22,58 @@ async function createRecipe(recipeData) {
         createdAt: new Date(),
         updatedAt: new Date(),
     };
-
     // Insert the new recipe
     const result = await db.insertOne(newRecipe);
 
     if (result.insertedId) {
-        const authorObjectId = new ObjectId(recipeData.authorId);
-        console.log("Attempting to update user with ID:", authorObjectId);
+        try {
+            const authorObjectId = new ObjectId(recipeData.authorId);
+            console.log("Attempting to update user with ID:", authorObjectId);
 
-        const user = await usersDb.findOne({
-            _id: new ObjectId(recipeData.authorId),
-        });
-        console.log(user);
+            const user = await usersDb.findOne({
+                _id: new ObjectId(recipeData.authorId),
+            });
+            console.log(user);
+
+            const updateResult = await usersDb.updateOne(
+                { _id: authorObjectId },
+                {
+                    $push: {
+                        recipe: {
+                            title: recipeData.title,
+                            slug: generateSlug(recipeData.title),
+                            imgUrl: recipeData.imgUrl,
+                        },
+                    },
+                }
+            );
+
+            if (updateResult.modifiedCount === 0) {
+                console.error(
+                    `Failed to update user with ID ${authorObjectId}. User may not exist.`
+                );
+            } else {
+                console.log(
+                    `Successfully added recipe ID ${result.insertedId} to user ${authorObjectId}.`
+                );
+            }
+        } catch (error) {
+            console.error(
+                "Error while updating user's recipe array:",
+                error.message
+            );
+        }
     }
     return result;
 }
 
 async function getAllRecipes(skip, limit) {
-    const recipes = await db.find().skip(skip).limit(limit).toArray();
+    const recipes = await db
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray();
     return recipes;
 }
 
